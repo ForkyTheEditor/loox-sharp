@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LooxSharp
 {
-    enum TokenType
+    public enum TokenType
     {
         //Single characters
         LEFT_PARNTH, RIGHT_PARNTH, LEFT_BRACE, RIGHT_BRACE, COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR, 
