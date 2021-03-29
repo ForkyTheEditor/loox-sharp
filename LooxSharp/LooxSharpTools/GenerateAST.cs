@@ -69,7 +69,7 @@ namespace LooxSharpTools
             writer.WriteLine("    public class " + className + " : " + baseName + " {");
 
             //print the constructor
-            writer.WriteLine("      " + className + "(" + fields + ") { " );
+            writer.WriteLine("      public " + className + "(" + fields + ") { " );
 
             string[] separateFields = fields.Split(", ");
             //Fill constructor

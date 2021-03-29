@@ -15,7 +15,7 @@ namespace LooxSharp
         }
         public class Binary : Expr
         {
-            Binary(Expr left, Token op, Expr right)
+            public Binary(Expr left, Token op, Expr right)
             {
                 this.left = left;
                 this.op = op;
@@ -33,7 +33,7 @@ namespace LooxSharp
         }
         public class Unary : Expr
         {
-            Unary(Token op, Expr right)
+            public Unary(Token op, Expr right)
             {
                 this.op = op;
                 this.right = right;
@@ -49,7 +49,7 @@ namespace LooxSharp
         }
         public class Grouping : Expr
         {
-            Grouping(Expr expression)
+            public Grouping(Expr expression)
             {
                 this.expression = expression;
             }
@@ -63,7 +63,7 @@ namespace LooxSharp
         }
         public class Literal : Expr
         {
-            Literal(Object value)
+            public Literal(Object value)
             {
                 this.value = value;
             }
