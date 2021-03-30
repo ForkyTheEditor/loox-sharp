@@ -50,7 +50,7 @@ namespace LooxSharp
 
             while (true)
             {
-                Console.Write("> ");
+                Console.Write(">>> ");
 
                 string input = Console.ReadLine();
                 if (input == null)
@@ -68,17 +68,34 @@ namespace LooxSharp
         {
             Scanner scanner = new Scanner(code);
             List<Token> tokens = scanner.scanTokens();
+            Parser parser = new Parser(tokens);
+            Expr expression = parser.parse();
 
-            foreach (Token tkn in tokens)
+            if (hadError)
             {
-                Console.WriteLine(tkn);
+                return;
             }
+
+            Console.WriteLine(new ASTPrinter().print(expression));
+         
 
         }
 
         public static void error(int line, string message)
         {
             report(line, "", message);
+        }
+
+        public static void error(Token token, string message)
+        {
+            if(token.type == TokenType.EOF)
+            {
+                report(token.line, " at end", message);
+            }
+            else
+            {
+                report(token.line, " at '" + token.lexeme + "'", message);
+            }
         }
 
         private static void report(int line, string where, string message)
