@@ -43,7 +43,8 @@ namespace LooxSharp
             StringBuilder builder = new StringBuilder();
 
             builder.Append("(");
-            foreach(Expr expr in exprs)
+            builder.Append(name);
+            foreach (Expr expr in exprs)
             {
                 builder.Append(" ");
                 builder.Append(expr.accept(this));
