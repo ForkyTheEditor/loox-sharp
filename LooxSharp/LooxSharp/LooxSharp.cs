@@ -6,8 +6,10 @@ namespace LooxSharp
 {
     class LooxSharp
     {
+        private static readonly Interpreter interpreter = new Interpreter();
         static bool hadError = false;
-
+        static bool hadRuntimeError = false;
+        
         static void Main(string[] args)
         {
             if (args.Length > 1)
@@ -40,6 +42,10 @@ namespace LooxSharp
             if(hadError == true)
             {
                 Environment.Exit(65);
+            }
+            if(hadRuntimeError == true)
+            {
+                Environment.Exit(70);
             }
 
         }
@@ -76,9 +82,15 @@ namespace LooxSharp
                 return;
             }
 
-            Console.WriteLine(new ASTPrinter().print(expression));
+            interpreter.interpret(expression);
          
 
+        }
+
+        public static void runtimeError(RuntimeError err)
+        {
+            Console.Error.WriteLine(err.Message + "\n[line " + err.token.line + "]");
+            hadRuntimeError = true;
         }
 
         public static void error(int line, string message)

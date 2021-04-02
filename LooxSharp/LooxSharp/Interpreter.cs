@@ -9,6 +9,36 @@ namespace LooxSharp
     public class Interpreter : Expr.Visitor<object>
     {
         
+        public void interpret(Expr expr)
+        {
+            try
+            {
+                object value = evaluate(expr);
+                Console.WriteLine(stringify(value));
+            }
+            catch(RuntimeError err)
+            {
+                LooxSharp.runtimeError(err);
+            }
+        }
+
+        private string stringify(object val)
+        {
+            if (val == null) return "nil";
+
+            if(val is double)
+            {
+                string text = val.ToString();
+                if (text.EndsWith(".0"))
+                {
+                    //Strip the unnecessary .0
+                    text = text.Substring(0, text.Length - 2);
+                }
+                return text;
+            }
+            return val.ToString();
+        }
+
         public object visitLiteralExpr(Expr.Literal expr)
         {
             return expr.value;
@@ -44,10 +74,14 @@ namespace LooxSharp
             switch (expr.op.type)
             {
                 case TokenType.SLASH:
+                    checkNumberOperand(expr.op, left, right);
+                    if ((double)right == 0) throw new RuntimeError(expr.op, "Division by 0 not permitted!");
                     return (double)left / (double)right;
                 case TokenType.MINUS:
+                    checkNumberOperand(expr.op, left, right);
                     return (double)left - (double)right;
                 case TokenType.STAR:
+                    checkNumberOperand(expr.op, left, right);
                     return (double)left * (double)right;
                 case TokenType.PLUS:
                     if(left is double && right is double)
@@ -58,14 +92,18 @@ namespace LooxSharp
                     {
                         return (string)left + (string)right;
                     }
-                    break;
+                    throw new RuntimeError(expr.op, "Operands must be 2 numbers or 2 strings!");
                 case TokenType.GREATER:
+                    checkNumberOperand(expr.op, left, right);
                     return (double)left > (double)right;
                 case TokenType.GREATER_EQUAL:
+                    checkNumberOperand(expr.op, left, right);
                     return (double)left >= (double)right;
                 case TokenType.LESS:
+                    checkNumberOperand(expr.op, left, right);
                     return (double)left < (double)right;
                 case TokenType.LESS_EQUAL:
+                    checkNumberOperand(expr.op, left, right);
                     return (double)left <= (double)right;
                 case TokenType.EQUAL_EQUAL:
                     return isEqual(left, right);
@@ -83,6 +121,13 @@ namespace LooxSharp
         {
             if (operand is double) return;
             throw new RuntimeError(op, "Operand must be a number.");
+        }
+
+        private void checkNumberOperand(Token op, object left, object right)
+        {
+            if (left is double && right is double) return;
+
+            throw new RuntimeError(op, "Operands must be numbers!");
         }
 
 
